@@ -1,0 +1,10 @@
+# Change XYZ to the UID of your Industrial PTC Bricklet
+
+setup:
+	# Handle incoming temperature callbacks
+	subscribe to tinkerforge/callback/industrial_ptc_bricklet/XYZ/temperature
+	publish '{"register": true}' to tinkerforge/register/industrial_ptc_bricklet/XYZ/temperature # Register temperature callback
+
+	# Configure threshold for temperature "greater than 30 °C"
+	# with a debounce period of 1s (1000ms)
+	publish '{"period": 1000, "value_has_to_change": false, "option": "greater", "min": 3000, "max": 0}' to tinkerforge/request/industrial_ptc_bricklet/XYZ/set_temperature_callback_configuration

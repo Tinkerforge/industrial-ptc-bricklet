@@ -1,0 +1,6 @@
+# Change XYZ to the UID of your Industrial PTC Bricklet
+
+setup:
+	# Get current temperature
+	subscribe to tinkerforge/response/industrial_ptc_bricklet/XYZ/get_temperature
+	publish '' to tinkerforge/request/industrial_ptc_bricklet/XYZ/get_temperature

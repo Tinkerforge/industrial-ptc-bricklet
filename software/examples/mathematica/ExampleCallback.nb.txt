@@ -1,0 +1,27 @@
+Needs["NETLink`"]
+LoadNETAssembly["Tinkerforge",NotebookDirectory[]<>"../../.."]
+
+host="localhost"
+port=4223
+uid="XYZ"(*Change XYZ to the UID of your Industrial PTC Bricklet*)
+
+(*Create IPConnection and device object*)
+ipcon=NETNew["Tinkerforge.IPConnection"]
+ip=NETNew["Tinkerforge.BrickletIndustrialPTC",uid,ipcon]
+ipcon@Connect[host,port]
+
+(*Callback function for temperature callback*)
+TemperatureCB[sender_,temperature_]:=
+ Print["Temperature: "<>ToString[N[Quantity[temperature,"°C/100"]]]]
+AddEventHandler[ip@TemperatureCallback,TemperatureCB]
+
+(*Set period for temperature callback to 1s (1000ms) without a threshold*)
+option=Tinkerforge`BrickletIndustrialPTC`THRESHOLDUOPTIONUOFF
+ip@SetTemperatureCallbackConfiguration[1000,False,option,0,0]
+
+Input["Click OK to exit"]
+
+(*Clean up*)
+ipcon@Disconnect[]
+ReleaseNETObject[ip]
+ReleaseNETObject[ipcon]

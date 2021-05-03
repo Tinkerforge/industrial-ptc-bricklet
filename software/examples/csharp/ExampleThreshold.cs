@@ -16,17 +16,17 @@ class Example
 	static void Main()
 	{
 		IPConnection ipcon = new IPConnection(); // Create IP connection
-		BrickletIndustrialPTC ip = new BrickletIndustrialPTC(UID, ipcon); // Create device object
+		BrickletIndustrialPTC ptc = new BrickletIndustrialPTC(UID, ipcon); // Create device object
 
 		ipcon.Connect(HOST, PORT); // Connect to brickd
 		// Don't use device before ipcon is connected
 
 		// Register temperature callback to function TemperatureCB
-		ip.TemperatureCallback += TemperatureCB;
+		ptc.TemperatureCallback += TemperatureCB;
 
 		// Configure threshold for temperature "greater than 30 °C"
 		// with a debounce period of 1s (1000ms)
-		ip.SetTemperatureCallbackConfiguration(1000, false, '>', 30*100, 0);
+		ptc.SetTemperatureCallbackConfiguration(1000, false, '>', 30*100, 0);
 
 		Console.WriteLine("Press enter to exit");
 		Console.ReadLine();

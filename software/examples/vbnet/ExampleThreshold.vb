@@ -14,17 +14,17 @@ Module ExampleThreshold
 
     Sub Main()
         Dim ipcon As New IPConnection() ' Create IP connection
-        Dim ip As New BrickletIndustrialPTC(UID, ipcon) ' Create device object
+        Dim ptc As New BrickletIndustrialPTC(UID, ipcon) ' Create device object
 
         ipcon.Connect(HOST, PORT) ' Connect to brickd
         ' Don't use device before ipcon is connected
 
         ' Register temperature callback to subroutine TemperatureCB
-        AddHandler ip.TemperatureCallback, AddressOf TemperatureCB
+        AddHandler ptc.TemperatureCallback, AddressOf TemperatureCB
 
         ' Configure threshold for temperature "greater than 30 °C"
         ' with a debounce period of 1s (1000ms)
-        ip.SetTemperatureCallbackConfiguration(1000, False, ">"C, 30*100, 0)
+        ptc.SetTemperatureCallbackConfiguration(1000, False, ">"C, 30*100, 0)
 
         Console.WriteLine("Press key to exit")
         Console.ReadLine()

@@ -12,13 +12,13 @@ public class ExampleThreshold {
 	//       you might normally want to catch are described in the documentation
 	public static void main(String args[]) throws Exception {
 		IPConnection ipcon = new IPConnection(); // Create IP connection
-		BrickletIndustrialPTC ip = new BrickletIndustrialPTC(UID, ipcon); // Create device object
+		BrickletIndustrialPTC ptc = new BrickletIndustrialPTC(UID, ipcon); // Create device object
 
 		ipcon.connect(HOST, PORT); // Connect to brickd
 		// Don't use device before ipcon is connected
 
 		// Add temperature listener
-		ip.addTemperatureListener(new BrickletIndustrialPTC.TemperatureListener() {
+		ptc.addTemperatureListener(new BrickletIndustrialPTC.TemperatureListener() {
 			public void temperature(int temperature) {
 				System.out.println("Temperature: " + temperature/100.0 + " °C");
 			}
@@ -26,7 +26,7 @@ public class ExampleThreshold {
 
 		// Configure threshold for temperature "greater than 30 °C"
 		// with a debounce period of 1s (1000ms)
-		ip.setTemperatureCallbackConfiguration(1000, false, '>', 30*100, 0);
+		ptc.setTemperatureCallbackConfiguration(1000, false, '>', 30*100, 0);
 
 		System.out.println("Press key to exit"); System.in.read();
 		ipcon.disconnect();

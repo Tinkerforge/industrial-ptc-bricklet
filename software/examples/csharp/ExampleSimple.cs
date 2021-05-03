@@ -10,13 +10,13 @@ class Example
 	static void Main()
 	{
 		IPConnection ipcon = new IPConnection(); // Create IP connection
-		BrickletIndustrialPTC ip = new BrickletIndustrialPTC(UID, ipcon); // Create device object
+		BrickletIndustrialPTC ptc = new BrickletIndustrialPTC(UID, ipcon); // Create device object
 
 		ipcon.Connect(HOST, PORT); // Connect to brickd
 		// Don't use device before ipcon is connected
 
 		// Get current temperature
-		int temperature = ip.GetTemperature();
+		int temperature = ptc.GetTemperature();
 		Console.WriteLine("Temperature: " + temperature/100.0 + " °C");
 
 		Console.WriteLine("Press enter to exit");

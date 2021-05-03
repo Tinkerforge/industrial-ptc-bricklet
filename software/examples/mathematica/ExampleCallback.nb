@@ -14,18 +14,18 @@ Notebook[{
 "}],
    RowBox[{"(*", "Create IPConnection and device object", "*)"}],
    RowBox[{"ipcon", "=", RowBox[{"NETNew", "[", "\"\<Tinkerforge.IPConnection\>\"", "]"}]}],
-   RowBox[{"ip", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletIndustrialPTC\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
+   RowBox[{"ptc", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletIndustrialPTC\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
    RowBox[{"ipcon", "@", RowBox[{"Connect", "[", RowBox[{"host", ",", "port"}], "]"}]}],
    RowBox[{"
 "}],
    RowBox[{"(*", "Callback function for temperature callback", "*)"}],
    RowBox[{RowBox[{"TemperatureCB", "[", RowBox[{"sender_", ",", "temperature_"}], "]"}], ":=", "\[IndentingNewLine]", RowBox[{"Print", "[", RowBox[{"\"\<Temperature: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{"temperature", ",", "\"\<\.b0C/100\>\""}], "]"}], "]"}], "]"}]}], "]"}]}],
-   RowBox[{"AddEventHandler", "[", RowBox[{RowBox[{"ip", "@", "TemperatureCallback"}], ",", "TemperatureCB"}], "]"}],
+   RowBox[{"AddEventHandler", "[", RowBox[{RowBox[{"ptc", "@", "TemperatureCallback"}], ",", "TemperatureCB"}], "]"}],
    RowBox[{"
 "}],
    RowBox[{"(*", "Set period for temperature callback to 1s (1000ms) without a threshold", "*)"}],
    RowBox[{"option", "=", "Tinkerforge`BrickletIndustrialPTC`THRESHOLDUOPTIONUOFF"}],
-   RowBox[{"ip", "@", RowBox[{"SetTemperatureCallbackConfiguration", "[", RowBox[{"1000", ",", "False", ",", "option", ",", "0", ",", "0"}], "]"}]}],
+   RowBox[{"ptc", "@", RowBox[{"SetTemperatureCallbackConfiguration", "[", RowBox[{"1000", ",", "False", ",", "option", ",", "0", ",", "0"}], "]"}]}],
    RowBox[{"
 "}],
    RowBox[{"Input", "[", "\"\<Click OK to exit\>\"", "]"}],
@@ -33,7 +33,7 @@ Notebook[{
 "}],
    RowBox[{"(*", "Clean up", "*)"}],
    RowBox[{"ipcon", "@", RowBox[{"Disconnect", "[", "]"}]}],
-   RowBox[{"ReleaseNETObject", "[", "ip", "]"}],
+   RowBox[{"ReleaseNETObject", "[", "ptc", "]"}],
    RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]
   }], "Input"
  ]

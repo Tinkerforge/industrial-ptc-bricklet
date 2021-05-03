@@ -10,7 +10,7 @@ type
   TExample = class
   private
     ipcon: TIPConnection;
-    ip: TBrickletIndustrialPTC;
+    ptc: TBrickletIndustrialPTC;
   public
     procedure TemperatureCB(sender: TBrickletIndustrialPTC; const temperature: longint);
     procedure Execute;
@@ -37,17 +37,17 @@ begin
   ipcon := TIPConnection.Create;
 
   { Create device object }
-  ip := TBrickletIndustrialPTC.Create(UID, ipcon);
+  ptc := TBrickletIndustrialPTC.Create(UID, ipcon);
 
   { Connect to brickd }
   ipcon.Connect(HOST, PORT);
   { Don't use device before ipcon is connected }
 
   { Register temperature callback to procedure TemperatureCB }
-  ip.OnTemperature := {$ifdef FPC}@{$endif}TemperatureCB;
+  ptc.OnTemperature := {$ifdef FPC}@{$endif}TemperatureCB;
 
   { Set period for temperature callback to 1s (1000ms) without a threshold }
-  ip.SetTemperatureCallbackConfiguration(1000, false, 'x', 0, 0);
+  ptc.SetTemperatureCallbackConfiguration(1000, false, 'x', 0, 0);
 
   WriteLn('Press key to exit');
   ReadLn;

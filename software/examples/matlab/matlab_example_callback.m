@@ -7,16 +7,16 @@ function matlab_example_callback()
     UID = 'XYZ'; % Change XYZ to the UID of your Industrial PTC Bricklet
 
     ipcon = IPConnection(); % Create IP connection
-    ip = handle(BrickletIndustrialPTC(UID, ipcon), 'CallbackProperties'); % Create device object
+    ptc = handle(BrickletIndustrialPTC(UID, ipcon), 'CallbackProperties'); % Create device object
 
     ipcon.connect(HOST, PORT); % Connect to brickd
     % Don't use device before ipcon is connected
 
     % Register temperature callback to function cb_temperature
-    set(ip, 'TemperatureCallback', @(h, e) cb_temperature(e));
+    set(ptc, 'TemperatureCallback', @(h, e) cb_temperature(e));
 
     % Set period for temperature callback to 1s (1000ms) without a threshold
-    ip.setTemperatureCallbackConfiguration(1000, false, 'x', 0, 0);
+    ptc.setTemperatureCallbackConfiguration(1000, false, 'x', 0, 0);
 
     input('Press key to exit\n', 's');
     ipcon.disconnect();

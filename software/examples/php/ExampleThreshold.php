@@ -17,17 +17,17 @@ function cb_temperature($temperature)
 }
 
 $ipcon = new IPConnection(); // Create IP connection
-$ip = new BrickletIndustrialPTC(UID, $ipcon); // Create device object
+$ptc = new BrickletIndustrialPTC(UID, $ipcon); // Create device object
 
 $ipcon->connect(HOST, PORT); // Connect to brickd
 // Don't use device before ipcon is connected
 
 // Register temperature callback to function cb_temperature
-$ip->registerCallback(BrickletIndustrialPTC::CALLBACK_TEMPERATURE, 'cb_temperature');
+$ptc->registerCallback(BrickletIndustrialPTC::CALLBACK_TEMPERATURE, 'cb_temperature');
 
 // Configure threshold for temperature "greater than 30 °C"
 // with a debounce period of 1s (1000ms)
-$ip->setTemperatureCallbackConfiguration(1000, FALSE, '>', 30*100, 0);
+$ptc->setTemperatureCallbackConfiguration(1000, FALSE, '>', 30*100, 0);
 
 echo "Press ctrl+c to exit\n";
 $ipcon->dispatchCallbacks(-1); // Dispatch callbacks forever

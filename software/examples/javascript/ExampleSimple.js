@@ -5,7 +5,7 @@ var PORT = 4223;
 var UID = 'XYZ'; // Change XYZ to the UID of your Industrial PTC Bricklet
 
 var ipcon = new Tinkerforge.IPConnection(); // Create IP connection
-var ip = new Tinkerforge.BrickletIndustrialPTC(UID, ipcon); // Create device object
+var ptc = new Tinkerforge.BrickletIndustrialPTC(UID, ipcon); // Create device object
 
 ipcon.connect(HOST, PORT,
     function (error) {
@@ -17,7 +17,7 @@ ipcon.connect(HOST, PORT,
 ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
     function (connectReason) {
         // Get current temperature
-        ip.getTemperature(
+        ptc.getTemperature(
             function (temperature) {
                 console.log('Temperature: ' + temperature/100.0 + ' °C');
             },

@@ -7,22 +7,22 @@ uid="XYZ"(*Change XYZ to the UID of your Industrial PTC Bricklet*)
 
 (*Create IPConnection and device object*)
 ipcon=NETNew["Tinkerforge.IPConnection"]
-ip=NETNew["Tinkerforge.BrickletIndustrialPTC",uid,ipcon]
+ptc=NETNew["Tinkerforge.BrickletIndustrialPTC",uid,ipcon]
 ipcon@Connect[host,port]
 
 (*Callback function for temperature callback*)
 TemperatureCB[sender_,temperature_]:=
  Print["Temperature: "<>ToString[N[Quantity[temperature,"°C/100"]]]]
-AddEventHandler[ip@TemperatureCallback,TemperatureCB]
+AddEventHandler[ptc@TemperatureCallback,TemperatureCB]
 
 (*Configure threshold for temperature "greater than 30 °C"*)
 (*with a debounce period of 1s (1000ms)*)
 option=Tinkerforge`BrickletIndustrialPTC`THRESHOLDUOPTIONUGREATER
-ip@SetTemperatureCallbackConfiguration[1000,False,option,30*100,0]
+ptc@SetTemperatureCallbackConfiguration[1000,False,option,30*100,0]
 
 Input["Click OK to exit"]
 
 (*Clean up*)
 ipcon@Disconnect[]
-ReleaseNETObject[ip]
+ReleaseNETObject[ptc]
 ReleaseNETObject[ipcon]

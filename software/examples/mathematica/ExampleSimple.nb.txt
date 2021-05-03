@@ -7,13 +7,13 @@ uid="XYZ"(*Change XYZ to the UID of your Industrial PTC Bricklet*)
 
 (*Create IPConnection and device object*)
 ipcon=NETNew["Tinkerforge.IPConnection"]
-ip=NETNew["Tinkerforge.BrickletIndustrialPTC",uid,ipcon]
+ptc=NETNew["Tinkerforge.BrickletIndustrialPTC",uid,ipcon]
 ipcon@Connect[host,port]
 
 (*Get current temperature*)
-Print["Temperature: "<>ToString[N[Quantity[ip@GetTemperature[],"°C/100"]]]]
+Print["Temperature: "<>ToString[N[Quantity[ptc@GetTemperature[],"°C/100"]]]]
 
 (*Clean up*)
 ipcon@Disconnect[]
-ReleaseNETObject[ip]
+ReleaseNETObject[ptc]
 ReleaseNETObject[ipcon]

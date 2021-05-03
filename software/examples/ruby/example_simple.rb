@@ -11,13 +11,13 @@ PORT = 4223
 UID = 'XYZ' # Change XYZ to the UID of your Industrial PTC Bricklet
 
 ipcon = IPConnection.new # Create IP connection
-ip = BrickletIndustrialPTC.new UID, ipcon # Create device object
+ptc = BrickletIndustrialPTC.new UID, ipcon # Create device object
 
 ipcon.connect HOST, PORT # Connect to brickd
 # Don't use device before ipcon is connected
 
 # Get current temperature
-temperature = ip.get_temperature
+temperature = ptc.get_temperature
 puts "Temperature: #{temperature/100.0} °C"
 
 puts 'Press key to exit'

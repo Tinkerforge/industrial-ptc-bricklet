@@ -7,15 +7,15 @@ const UID: &str = "XYZ"; // Change XYZ to the UID of your Industrial PTC Brickle
 
 fn main() -> Result<(), Box<dyn Error>> {
     let ipcon = IpConnection::new(); // Create IP connection.
-    let ip = IndustrialPtcBricklet::new(UID, &ipcon); // Create device object.
+    let ptc = IndustrialPtcBricklet::new(UID, &ipcon); // Create device object.
 
     ipcon.connect((HOST, PORT)).recv()??; // Connect to brickd.
                                           // Don't use device before ipcon is connected.
 
-    let temperature_receiver = ip.get_temperature_callback_receiver();
+    let temperature_receiver = ptc.get_temperature_callback_receiver();
 
     // Spawn thread to handle received callback messages.
-    // This thread ends when the `ip` object
+    // This thread ends when the `ptc` object
     // is dropped, so there is no need for manual cleanup.
     thread::spawn(move || {
         for temperature in temperature_receiver {
@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Configure threshold for temperature "greater than 30 °C"
     // with a debounce period of 1s (1000ms).
-    ip.set_temperature_callback_configuration(1000, false, '>', 30 * 100, 0);
+    ptc.set_temperature_callback_configuration(1000, false, '>', 30 * 100, 0);
 
     println!("Press enter to exit.");
     let mut _input = String::new();

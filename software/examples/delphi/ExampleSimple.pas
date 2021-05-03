@@ -10,7 +10,7 @@ type
   TExample = class
   private
     ipcon: TIPConnection;
-    ip: TBrickletIndustrialPTC;
+    ptc: TBrickletIndustrialPTC;
   public
     procedure Execute;
   end;
@@ -30,14 +30,14 @@ begin
   ipcon := TIPConnection.Create;
 
   { Create device object }
-  ip := TBrickletIndustrialPTC.Create(UID, ipcon);
+  ptc := TBrickletIndustrialPTC.Create(UID, ipcon);
 
   { Connect to brickd }
   ipcon.Connect(HOST, PORT);
   { Don't use device before ipcon is connected }
 
   { Get current temperature }
-  temperature := ip.GetTemperature;
+  temperature := ptc.GetTemperature;
   WriteLn(Format('Temperature: %f °C', [temperature/100.0]));
 
   WriteLn('Press key to exit');

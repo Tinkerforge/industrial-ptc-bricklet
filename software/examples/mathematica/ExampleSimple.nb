@@ -14,17 +14,17 @@ Notebook[{
 "}],
    RowBox[{"(*", "Create IPConnection and device object", "*)"}],
    RowBox[{"ipcon", "=", RowBox[{"NETNew", "[", "\"\<Tinkerforge.IPConnection\>\"", "]"}]}],
-   RowBox[{"ip", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletIndustrialPTC\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
+   RowBox[{"ptc", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletIndustrialPTC\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
    RowBox[{"ipcon", "@", RowBox[{"Connect", "[", RowBox[{"host", ",", "port"}], "]"}]}],
    RowBox[{"
 "}],
    RowBox[{"(*", "Get current temperature", "*)"}],
-   RowBox[{"Print", "[", RowBox[{"\"\<Temperature: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{RowBox[{"ip", "@", RowBox[{"GetTemperature", "[", "]"}]}], ",", "\"\<\.b0C/100\>\""}], "]"}], "]"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Temperature: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"N", "[", RowBox[{"Quantity", "[", RowBox[{RowBox[{"ptc", "@", RowBox[{"GetTemperature", "[", "]"}]}], ",", "\"\<\.b0C/100\>\""}], "]"}], "]"}], "]"}]}], "]"}],
    RowBox[{"
 "}],
    RowBox[{"(*", "Clean up", "*)"}],
    RowBox[{"ipcon", "@", RowBox[{"Disconnect", "[", "]"}]}],
-   RowBox[{"ReleaseNETObject", "[", "ip", "]"}],
+   RowBox[{"ReleaseNETObject", "[", "ptc", "]"}],
    RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]
   }], "Input"
  ]

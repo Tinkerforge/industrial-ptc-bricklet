@@ -13,8 +13,8 @@ int main(void) {
 	ipcon_create(&ipcon);
 
 	// Create device object
-	IndustrialPTC ip;
-	industrial_ptc_create(&ip, UID, &ipcon);
+	IndustrialPTC ptc;
+	industrial_ptc_create(&ptc, UID, &ipcon);
 
 	// Connect to brickd
 	if(ipcon_connect(&ipcon, HOST, PORT) < 0) {
@@ -25,7 +25,7 @@ int main(void) {
 
 	// Get current temperature
 	int32_t temperature;
-	if(industrial_ptc_get_temperature(&ip, &temperature) < 0) {
+	if(industrial_ptc_get_temperature(&ptc, &temperature) < 0) {
 		fprintf(stderr, "Could not get temperature, probably timeout\n");
 		return 1;
 	}
@@ -34,7 +34,7 @@ int main(void) {
 
 	printf("Press key to exit\n");
 	getchar();
-	industrial_ptc_destroy(&ip);
+	industrial_ptc_destroy(&ptc);
 	ipcon_destroy(&ipcon); // Calls ipcon_disconnect internally
 	return 0;
 }

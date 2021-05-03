@@ -6,17 +6,17 @@ function octave_example_threshold()
     UID = "XYZ"; % Change XYZ to the UID of your Industrial PTC Bricklet
 
     ipcon = javaObject("com.tinkerforge.IPConnection"); % Create IP connection
-    ip = javaObject("com.tinkerforge.BrickletIndustrialPTC", UID, ipcon); % Create device object
+    ptc = javaObject("com.tinkerforge.BrickletIndustrialPTC", UID, ipcon); % Create device object
 
     ipcon.connect(HOST, PORT); % Connect to brickd
     % Don't use device before ipcon is connected
 
     % Register temperature callback to function cb_temperature
-    ip.addTemperatureCallback(@cb_temperature);
+    ptc.addTemperatureCallback(@cb_temperature);
 
     % Configure threshold for temperature "greater than 30 °C"
     % with a debounce period of 1s (1000ms)
-    ip.setTemperatureCallbackConfiguration(1000, false, ">", 30*100, 0);
+    ptc.setTemperatureCallbackConfiguration(1000, false, ">", 30*100, 0);
 
     input("Press key to exit\n", "s");
     ipcon.disconnect();

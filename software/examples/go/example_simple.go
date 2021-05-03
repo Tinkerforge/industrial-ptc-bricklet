@@ -12,14 +12,14 @@ const UID string = "XYZ" // Change XYZ to the UID of your Industrial PTC Brickle
 func main() {
 	ipcon := ipconnection.New()
 	defer ipcon.Close()
-	ip, _ := industrial_ptc_bricklet.New(UID, &ipcon) // Create device object.
+	ptc, _ := industrial_ptc_bricklet.New(UID, &ipcon) // Create device object.
 
 	ipcon.Connect(ADDR) // Connect to brickd.
 	defer ipcon.Disconnect()
 	// Don't use device before ipcon is connected.
 
 	// Get current temperature.
-	temperature, _ := ip.GetTemperature()
+	temperature, _ := ptc.GetTemperature()
 	fmt.Printf("Temperature: %f °C\n", float64(temperature)/100.0)
 
 	fmt.Print("Press enter to exit.")

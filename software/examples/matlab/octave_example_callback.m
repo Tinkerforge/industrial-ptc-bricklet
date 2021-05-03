@@ -6,16 +6,16 @@ function octave_example_callback()
     UID = "XYZ"; % Change XYZ to the UID of your Industrial PTC Bricklet
 
     ipcon = javaObject("com.tinkerforge.IPConnection"); % Create IP connection
-    ip = javaObject("com.tinkerforge.BrickletIndustrialPTC", UID, ipcon); % Create device object
+    ptc = javaObject("com.tinkerforge.BrickletIndustrialPTC", UID, ipcon); % Create device object
 
     ipcon.connect(HOST, PORT); % Connect to brickd
     % Don't use device before ipcon is connected
 
     % Register temperature callback to function cb_temperature
-    ip.addTemperatureCallback(@cb_temperature);
+    ptc.addTemperatureCallback(@cb_temperature);
 
     % Set period for temperature callback to 1s (1000ms) without a threshold
-    ip.setTemperatureCallbackConfiguration(1000, false, "x", 0, 0);
+    ptc.setTemperatureCallbackConfiguration(1000, false, "x", 0, 0);
 
     input("Press key to exit\n", "s");
     ipcon.disconnect();

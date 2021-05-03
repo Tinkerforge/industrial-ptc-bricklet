@@ -14,16 +14,16 @@ Module ExampleCallback
 
     Sub Main()
         Dim ipcon As New IPConnection() ' Create IP connection
-        Dim ip As New BrickletIndustrialPTC(UID, ipcon) ' Create device object
+        Dim ptc As New BrickletIndustrialPTC(UID, ipcon) ' Create device object
 
         ipcon.Connect(HOST, PORT) ' Connect to brickd
         ' Don't use device before ipcon is connected
 
         ' Register temperature callback to subroutine TemperatureCB
-        AddHandler ip.TemperatureCallback, AddressOf TemperatureCB
+        AddHandler ptc.TemperatureCallback, AddressOf TemperatureCB
 
         ' Set period for temperature callback to 1s (1000ms) without a threshold
-        ip.SetTemperatureCallbackConfiguration(1000, False, "x"C, 0, 0)
+        ptc.SetTemperatureCallbackConfiguration(1000, False, "x"C, 0, 0)
 
         Console.WriteLine("Press key to exit")
         Console.ReadLine()

@@ -10,13 +10,13 @@ from tinkerforge.bricklet_industrial_ptc import BrickletIndustrialPTC
 
 if __name__ == "__main__":
     ipcon = IPConnection() # Create IP connection
-    ip = BrickletIndustrialPTC(UID, ipcon) # Create device object
+    ptc = BrickletIndustrialPTC(UID, ipcon) # Create device object
 
     ipcon.connect(HOST, PORT) # Connect to brickd
     # Don't use device before ipcon is connected
 
     # Get current temperature
-    temperature = ip.get_temperature()
+    temperature = ptc.get_temperature()
     print("Temperature: " + str(temperature/100.0) + " °C")
 
     input("Press key to exit\n") # Use raw_input() in Python 2

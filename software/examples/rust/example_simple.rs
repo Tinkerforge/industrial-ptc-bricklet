@@ -8,13 +8,13 @@ const UID: &str = "XYZ"; // Change XYZ to the UID of your Industrial PTC Brickle
 
 fn main() -> Result<(), Box<dyn Error>> {
     let ipcon = IpConnection::new(); // Create IP connection.
-    let ip = IndustrialPtcBricklet::new(UID, &ipcon); // Create device object.
+    let ptc = IndustrialPtcBricklet::new(UID, &ipcon); // Create device object.
 
     ipcon.connect((HOST, PORT)).recv()??; // Connect to brickd.
                                           // Don't use device before ipcon is connected.
 
     // Get current temperature.
-    let temperature = ip.get_temperature().recv()?;
+    let temperature = ptc.get_temperature().recv()?;
     println!("Temperature: {} °C", temperature as f32 / 100.0);
 
     println!("Press enter to exit.");

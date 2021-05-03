@@ -8,13 +8,13 @@ Module ExampleSimple
 
     Sub Main()
         Dim ipcon As New IPConnection() ' Create IP connection
-        Dim ip As New BrickletIndustrialPTC(UID, ipcon) ' Create device object
+        Dim ptc As New BrickletIndustrialPTC(UID, ipcon) ' Create device object
 
         ipcon.Connect(HOST, PORT) ' Connect to brickd
         ' Don't use device before ipcon is connected
 
         ' Get current temperature
-        Dim temperature As Integer = ip.GetTemperature()
+        Dim temperature As Integer = ptc.GetTemperature()
         Console.WriteLine("Temperature: " + (temperature/100.0).ToString() + " °C")
 
         Console.WriteLine("Press key to exit")

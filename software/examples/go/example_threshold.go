@@ -12,19 +12,19 @@ const UID string = "XYZ" // Change XYZ to the UID of your Industrial PTC Brickle
 func main() {
 	ipcon := ipconnection.New()
 	defer ipcon.Close()
-	ip, _ := industrial_ptc_bricklet.New(UID, &ipcon) // Create device object.
+	ptc, _ := industrial_ptc_bricklet.New(UID, &ipcon) // Create device object.
 
 	ipcon.Connect(ADDR) // Connect to brickd.
 	defer ipcon.Disconnect()
 	// Don't use device before ipcon is connected.
 
-	ip.RegisterTemperatureCallback(func(temperature int32) {
+	ptc.RegisterTemperatureCallback(func(temperature int32) {
 		fmt.Printf("Temperature: %f °C\n", float64(temperature)/100.0)
 	})
 
 	// Configure threshold for temperature "greater than 30 °C"
 	// with a debounce period of 1s (1000ms).
-	ip.SetTemperatureCallbackConfiguration(1000, false, '>', 30*100, 0)
+	ptc.SetTemperatureCallbackConfiguration(1000, false, '>', 30*100, 0)
 
 	fmt.Print("Press enter to exit.")
 	fmt.Scanln()

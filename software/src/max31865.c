@@ -23,6 +23,7 @@
 
 #include "configs/config_max31865.h"
 #include "bricklib2/os/coop_task.h"
+#include "bricklib2/hal/system_timer/system_timer.h"
 
 #include "communication.h"
 
@@ -97,8 +98,13 @@ void max31865_tick_task(void) {
 			uint8_t fault = max31865_read_register_task(REG_FAULT_STATUS);
 			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
 			max31865.fault = fault != 0;
+			max31865.fault_time = system_timer_get_ms();
 		} else {
-			max31865.fault = 0;
+			// 500ms debounce to go from not connected to connected.
+			// Otherwise we had some false positives during testing
+			if(system_timer_is_time_elapsed_ms(max31865.fault_time, 500)) {
+				max31865.fault = 0;
+			}
 
 			resistance >>= 1;
 

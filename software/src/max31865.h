@@ -38,6 +38,7 @@ typedef struct {
 	bool new_wire_mode;
 	uint8_t current_configuration;
 	bool fault;
+	uint32_t fault_time;
 
 	bool first_value;
 	bool sensor_connected_callback_enabled;

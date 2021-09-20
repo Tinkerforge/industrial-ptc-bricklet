@@ -153,16 +153,18 @@ bool handle_sensor_connected_callback(void) {
 	static SensorConnected_Callback cb;
 	static bool last_fault = true;
 
-	if(!max31865.sensor_connected_callback_enabled) {
-		return false;
-	}
+	if(!is_buffered) {
+		if(!max31865.sensor_connected_callback_enabled) {
+			return false;
+		}
 
-	if(!is_buffered && (last_fault != max31865.fault)) {
+		if(last_fault == max31865.fault) {
+			return false;
+		}
+
 		last_fault = max31865.fault;
 		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(SensorConnected_Callback), FID_CALLBACK_SENSOR_CONNECTED);
 		cb.connected = !last_fault;
-	} else {
-		return false;
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {

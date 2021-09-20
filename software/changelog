@@ -1,6 +1,6 @@
 2020-09-03: 2.0.0 (f145a50)
 - Initial version
 
-2021-09-20: 2.0.1 (TBD)
+2021-09-20: 2.0.1 (6a8f517)
 - Fix bug in sensor connected callback delivery logic
 - Add 500ms debounce to connected value

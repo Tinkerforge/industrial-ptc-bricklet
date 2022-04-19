@@ -9,8 +9,8 @@
 
 void check(int rc, const char* msg);
 
-void example_setup(TF_HalContext *hal);
-void example_loop(TF_HalContext *hal);
+void example_setup(TF_HAL *hal);
+void example_loop(TF_HAL *hal);
 
 
 // Callback function for temperature callback
@@ -21,22 +21,22 @@ static void temperature_handler(TF_IndustrialPTC *device, int32_t temperature,
 	tf_hal_printf("Temperature: %d 1/%d °C\n", temperature, 100);
 }
 
-static TF_IndustrialPTC ip;
+static TF_IndustrialPTC ptc;
 
-void example_setup(TF_HalContext *hal) {
+void example_setup(TF_HAL *hal) {
 	// Create device object
-	check(tf_industrial_ptc_create(&ip, UID, hal), "create device object");
+	check(tf_industrial_ptc_create(&ptc, UID, hal), "create device object");
 
 	// Register temperature callback to function temperature_handler
-	tf_industrial_ptc_register_temperature_callback(&ip,
+	tf_industrial_ptc_register_temperature_callback(&ptc,
 	                                                temperature_handler,
 	                                                NULL);
 
 	// Set period for temperature callback to 1s (1000ms) without a threshold
-	tf_industrial_ptc_set_temperature_callback_configuration(&ip, 1000, false, 'x', 0, 0);
+	tf_industrial_ptc_set_temperature_callback_configuration(&ptc, 1000, false, 'x', 0, 0);
 }
 
-void example_loop(TF_HalContext *hal) {
+void example_loop(TF_HAL *hal) {
 	// Poll for callbacks
 	tf_hal_callback_tick(hal, 0);
 }

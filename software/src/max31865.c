@@ -71,69 +71,22 @@ void max31865_write_register_task(const uint8_t reg, const uint8_t value) {
 	max31865_transceive_task(data, 2);
 }
 
-void max31865_tick_task(void) {
-	max31865_write_register_task(REG_CONFIGURATION, REG_CONF_50HZ_FILTER);
-	max31865.current_configuration = REG_CONF_VBIAS_ON | REG_CONF_50HZ_FILTER | REG_CONF_CONVERION_MODE_AUTO;
-	max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
 
-	while(true) {
-		if(max31865.new_wire_mode) {
-			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
-			max31865.new_wire_mode = false;
-		}
+void max31865_init_spi(void) {
+	// default pin configuration
+	const XMC_GPIO_CONFIG_t default_pin_config = {
+		.mode             = XMC_GPIO_MODE_INPUT_TRISTATE,
+		.input_hysteresis = XMC_GPIO_INPUT_HYSTERESIS_STANDARD
+	};
 
-		if(max31865.new_noise_filter) {
-			// Turn conversion mode off while changing filter
-			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration & (~REG_CONF_CONVERION_MODE_AUTO));
-			coop_task_sleep_ms(2);
+	// Start by disabling everything in case of a re-init
+	XMC_USIC_CH_Disable(MAX31865_USIC);
+	XMC_GPIO_Init(MAX31865_MISO_PIN,   &default_pin_config);
+	XMC_GPIO_Init(MAX31865_MOSI_PIN,   &default_pin_config);
+	XMC_GPIO_Init(MAX31865_SCLK_PIN,   &default_pin_config);
+	XMC_GPIO_Init(MAX31865_SELECT_PIN, &default_pin_config);
 
-			// Turn conversion mode on again
-			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
-			max31865.new_noise_filter = false;
-		}
 
-		uint16_t resistance = max31865_read_resistance();
-
-		if(resistance & REG_RTD_LSB_FAULT) {
-			uint8_t fault = max31865_read_register_task(REG_FAULT_STATUS);
-			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
-			max31865.fault = fault != 0;
-			max31865.fault_time = system_timer_get_ms();
-		} else {
-			// 500ms debounce to go from not connected to connected.
-			// Otherwise we had some false positives during testing
-			if(system_timer_is_time_elapsed_ms(max31865.fault_time, 500)) {
-				max31865.fault = 0;
-			}
-
-			resistance >>= 1;
-
-			int16_t rest = resistance % 100;
-			int32_t temperature = (pt_values[resistance/100  ]*(100-rest) +
-			                       pt_values[resistance/100+1]*(rest    ))/25;
-
-			if(max31865.first_value) {
-				max31865.first_value = false;
-				moving_average_init(&max31865.moving_average_resistance,  resistance,  MAX31865_RESISTANCE_MOVING_AVERAGE_DEFAULT);
-				moving_average_init(&max31865.moving_average_temperature, temperature, MAX31865_TEMPERATURE_MOVING_AVERAGE_DEFAULT);
-				max31865.current_resistance  = resistance;
-				max31865.current_temperature = temperature;
-			} else {
-				max31865.current_resistance  = moving_average_handle_value(&max31865.moving_average_resistance,  resistance);
-				max31865.current_temperature = moving_average_handle_value(&max31865.moving_average_temperature, temperature);
-			}
-		}
-
-		coop_task_sleep_ms(20);
-	}
-}
-
-void max31865_init(void) {
-	// Initialize the whole struct as zero
-	memset(&max31865, 0, sizeof(MAX31865));
-	max31865.first_value  = true;
-	max31865.wire_mode    = PTC_V2_WIRE_MODE_2;
-	max31865.noise_filter = PTC_V2_FILTER_OPTION_50HZ;
 
 	// USIC channel configuration
 	const XMC_SPI_CH_CONFIG_t channel_config = {
@@ -213,6 +166,81 @@ void max31865_init(void) {
 	XMC_GPIO_Init(MAX31865_MOSI_PIN, &mosi_pin_config);
 
 	XMC_USIC_CH_RXFIFO_EnableEvent(MAX31865_USIC, XMC_USIC_CH_RXFIFO_EVENT_CONF_STANDARD | XMC_USIC_CH_RXFIFO_EVENT_CONF_ALTERNATE);
+}
+
+void max31865_tick_task(void) {
+	max31865_write_register_task(REG_CONFIGURATION, REG_CONF_50HZ_FILTER);
+	max31865.current_configuration = REG_CONF_VBIAS_ON | REG_CONF_50HZ_FILTER | REG_CONF_CONVERION_MODE_AUTO;
+	max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
+
+	while(true) {
+		if(max31865.new_wire_mode) {
+			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
+			max31865.new_wire_mode = false;
+		}
+
+		if(max31865.new_noise_filter) {
+			// Turn conversion mode off while changing filter
+			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration & (~REG_CONF_CONVERION_MODE_AUTO));
+			coop_task_sleep_ms(2);
+
+			// Turn conversion mode on again
+			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
+			max31865.new_noise_filter = false;
+		}
+
+		uint16_t resistance = max31865_read_resistance();
+
+		if(resistance & REG_RTD_LSB_FAULT) {
+			uint8_t fault = max31865_read_register_task(REG_FAULT_STATUS);
+			max31865_write_register_task(REG_CONFIGURATION, max31865.current_configuration | REG_CONF_FAULT_STATUS_AUTO_CLEAR);
+			max31865.fault = fault != 0;
+			max31865.fault_time = system_timer_get_ms();
+		} else {
+			// 500ms debounce to go from not connected to connected.
+			// Otherwise we had some false positives during testing
+			if(system_timer_is_time_elapsed_ms(max31865.fault_time, 500)) {
+				max31865.fault = 0;
+			}
+
+			resistance >>= 1;
+
+			// If resistance is 0, we assume that the MAX31865 is in a broken state
+			if(resistance == 0) {
+				max31865_init_spi();
+				max31865.new_wire_mode    = true;
+				max31865.new_noise_filter = true;
+			} else {
+				int16_t rest = resistance % 100;
+				int32_t temperature = (pt_values[resistance/100  ]*(100-rest) +
+									pt_values[resistance/100+1]*(rest    ))/25;
+
+				if(max31865.first_value) {
+					max31865.first_value = false;
+					moving_average_init(&max31865.moving_average_resistance,  resistance,  MAX31865_RESISTANCE_MOVING_AVERAGE_DEFAULT);
+					moving_average_init(&max31865.moving_average_temperature, temperature, MAX31865_TEMPERATURE_MOVING_AVERAGE_DEFAULT);
+					max31865.current_resistance  = resistance;
+					max31865.current_temperature = temperature;
+				} else {
+					max31865.current_resistance  = moving_average_handle_value(&max31865.moving_average_resistance,  resistance);
+					max31865.current_temperature = moving_average_handle_value(&max31865.moving_average_temperature, temperature);
+				}
+			}
+		}
+
+		coop_task_sleep_ms(20);
+	}
+}
+
+void max31865_init(void) {
+	// Initialize the whole struct as zero
+	memset(&max31865, 0, sizeof(MAX31865));
+	max31865.first_value  = true;
+	max31865.wire_mode    = PTC_V2_WIRE_MODE_2;
+	max31865.noise_filter = PTC_V2_FILTER_OPTION_50HZ;
+
+	max31865_init_spi();
+
 	coop_task_init(&max31865_task, max31865_tick_task);
 }
 

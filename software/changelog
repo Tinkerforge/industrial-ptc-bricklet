@@ -5,5 +5,5 @@
 - Fix bug in sensor connected callback delivery logic
 - Add 500ms debounce to connected value
 
-2022-04-20: 2.0.2 (TBD):
+2022-04-20: 2.0.2 (7701b78):
 - Improve MAX31865/SPI error handling

@@ -21995,7 +21995,7 @@
   (gr_text "Pt" (at 148.3 72.05 270) (layer "F.SilkS") (tstamp c52fb0ff-c06d-49b7-bd31-3d9848f2376c)
     (effects (font (size 0.8 0.8) (thickness 0.15)))
   )
-  (gr_text "Industrial\n PTC 1.0" (at 162.3 100.75 270) (layer "F.SilkS") (tstamp dc24f75e-c855-4ec5-9971-f78c86be0303)
+  (gr_text "Industrial\n PTC 1.1" (at 162.3 100.75 270) (layer "F.SilkS") (tstamp dc24f75e-c855-4ec5-9971-f78c86be0303)
     (effects (font (size 0.8001 0.8001) (thickness 0.14986)))
   )
   (gr_text "1000" (at 137.6 72.15 270) (layer "F.SilkS") (tstamp e0284610-100a-4ef6-ba0d-bc7f2801f82c)

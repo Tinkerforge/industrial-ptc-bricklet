@@ -8,5 +8,5 @@
 2022-04-20: 2.0.2 (7701b78):
 - Improve MAX31865/SPI error handling
 
-2025-01-08: 2.0.3 (TBD):
+2025-01-08: 2.0.3 (ba20531):
 - Fix integer overflow in moving average at temperatures above 325°C

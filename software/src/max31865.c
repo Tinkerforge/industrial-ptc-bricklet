@@ -213,7 +213,7 @@ void max31865_tick_task(void) {
 			} else {
 				int16_t rest = resistance % 100;
 				int32_t temperature = (pt_values[resistance/100  ]*(100-rest) +
-									pt_values[resistance/100+1]*(rest    ))/25;
+				                       pt_values[resistance/100+1]*(rest    ))/25;
 
 				if(max31865.first_value) {
 					max31865.first_value = false;
